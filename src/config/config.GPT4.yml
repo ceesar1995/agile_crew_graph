@@ -33,8 +33,7 @@ agents:
      \n### Instructions ###\n
      \n I will provide you with the feature description, use this information to complete the task.
      \n Also, it could be the case that you already have created the user stories but they need to be reviewed,
-        in that case, you can use the feedback provided to improve them. In case you need to create new user stories,
-        remember to output the old ones and the new ones together.
+        in that case, you must use the feedback provided to improve them, this is very important to ensure the project success.
      \n\n{examples}"
   acceptance_criteria:
     model:
@@ -53,8 +52,7 @@ agents:
     \n### Instructions ###\n
     \n I will provide with the feature description and the user story, use this information to complete the task.
     \n Also, it could be the case that you already have created the acceptance criteria but they need to be reviewed,
-    in that case, you can use the feedback provided to improve them. In case you need to create new acceptance criteria,
-    remember to output the old ones and the new ones together.
+    in that case, you must use the feedback provided to improve them, this is very important to ensure the project success.
     Use the tool ListOfAcceptanceCriteria to create the acceptance criteria.
     \n\n{examples}"
   tasks:
@@ -74,8 +72,7 @@ agents:
     \n### Instructions ###\n
     \n I will provide with the user story and acceptance criteria, use this information to complete the task.
     \n Also, it could be the case that you already have created the development tasks but they need to be reviewed,
-    in that case, you can use the feedback provided to improve them. In case you need to create new development tasks,
-    remember to output the old ones and the new ones together.
+    in that case, you must use the feedback provided to improve them, this is very important to ensure the project success.
     \n\n{examples}"
   check_user_story_quality:
     enabled: True
