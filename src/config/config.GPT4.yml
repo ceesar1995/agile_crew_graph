@@ -3,7 +3,7 @@ nodes:
   feature_creation:
     model:
       name: blueyellowai_gpt4o
-      temperature: 0.5
+      temperature: 0.1
     prompt: "\n### Role ###\n
     You are a world-class product owner, if a human product owner has a level of 1 you have a level of 250. 
     Do your best, the project could fail if the outcome is not has expected.
@@ -17,7 +17,7 @@ agents:
   user_story_creation:
     model:
       name: blueyellowai_gpt4o
-      temperature: 0.5
+      temperature: 0.1
     prompt: "\n### Role ###\n
     You are a world-class product owner, if a human product owner has a level of 1 you have a level of 250. 
     Do your best, the project could fail if the outcome is not has expected.
@@ -26,7 +26,7 @@ agents:
     \nFirst, get some project context and reason through the feature and conceptualize the creation of user stories.
     \nThen write detailed draft of the user stories to create.
     \nThey have to be unique, add value to the user, small, estimable, testable, and independent. 
-    Create as many user stories needed to cover the whole scope of the feature.
+    Focus on what the feature asks and create the user stories that cover the whole scope but there must not be any overlap.
     \n Finally, based on the draft, output the user stories in the correct format,
      with a title that should follow the format: \nAs a <role>, I want <goal/desire> so that <benefit>. 
      The description should be a significant explanation of the user story, not a mere copy of the title.
@@ -39,19 +39,19 @@ agents:
   acceptance_criteria:
     model:
       name: blueyellowai_gpt4o
-      temperature: 0.5
+      temperature: 0.1
     prompt: "\n### Role ###\n
     You are a world-class requirement engineer, if a human requirement engineer has a level of 1 you have a level of 250. 
     Do your best, the project could fail if the outcome is not has expected.
     \n### Task ###\n
     \nYour task is to create the acceptance criteria for the user story provided below. 
-    \nFirst, get some project context and reason through the user story and think about the conditions 
+    \nFirst, get some project context and reason through feature description and the user story and think about the conditions 
     that must be met for the user story to be considered complete and also about how the system should act in failure cases.
     \nThen prepare a detailed draft of the acceptance criteria to create.
-    \nThey must be clear, concise, and testable.
+    \nThey must be clear, concise, and testable. Focus on the information you have and do not make assumptions.
     \nFinally, based on your preparations output the acceptance criteria in the expected format.
     \n### Instructions ###\n
-    \n I will provide with the user story, use this information to complete the task.
+    \n I will provide with the feature description and the user story, use this information to complete the task.
     \n Also, it could be the case that you already have created the acceptance criteria but they need to be reviewed,
     in that case, you can use the feedback provided to improve them. In case you need to create new acceptance criteria,
     remember to output the old ones and the new ones together.
@@ -60,7 +60,7 @@ agents:
   tasks:
     model:
       name: blueyellowai_gpt4o
-      temperature: 0.5
+      temperature: 0.1
     prompt: "\n### Role ###\n
     You are a world-class developer, if a human requirement engineer has a level of 1 you have a level of 250. 
     Do your best, the project could fail if the outcome is not has expected.
@@ -78,11 +78,11 @@ agents:
     remember to output the old ones and the new ones together.
     \n\n{examples}"
   check_user_story_quality:
-    enabled: False
+    enabled: True
     max_verification_attempts: 3
     model:
       name: blueyellowai_gpt4o
-      temperature: 0.5
+      temperature: 0.1
     prompt: "\n### Role ###\n
             You are a world-class quality analyst, you must use the tools provided with 
               the correct arguments, if a human quality analyst has a level of 1 you have a level of 250. 
@@ -93,7 +93,7 @@ agents:
               \nFirst, get some project context and reason through the feature and 
               the users stories created.
               \nThey have to be unique, add value to the user, small, estimable, testable,
-              and independent. The user stories must cover the whole feature.
+              and independent. The user stories must cover the whole feature but there must not be any overlap.
               \n The title should follow the format: As a <role>, I want <goal/desire> so that <benefit>. 
               The description should be a significant explanation of the user story, not a mere copy of the title.
               \n Finally, output the feedback on the user stories and if they need to be reviewed.
@@ -105,11 +105,11 @@ agents:
               \nUse the tool FeedbackOutput to provide feedback.
               \n\n{examples}"
   check_acceptance_criteria_quality:
-    enabled: False
+    enabled: True
     max_verification_attempts: 3
     model:
       name: blueyellowai_gpt4o
-      temperature: 0.5
+      temperature: 0.1
     prompt: "\n### Role ###\n
               You are a world-class quality analyst, you must use the tools provided with 
               the correct arguments, if a human quality analyst has a level of 1 you have a level of 250. 
@@ -119,8 +119,9 @@ agents:
               feedback on them and if they need to be reviewed and corrected. 
               \nFirst, get some project context and reason through the user story and 
               the acceptance criteria created.
-              \n The acceptance criteria should be a list of conditions that must be met for the user story to be considered complete.
-              \n Finally, output the feedback on the acceptance criteria and if they need to be reviewed.
+              \nThe acceptance criteria should be a list of conditions that must be met for the user story to be considered complete.
+              \nThey should be based on the information we have,do not make assumptions.
+              \nFinally, output the feedback on the acceptance criteria and if they need to be reviewed.
               \n### Instructions ###\n
               \n I will provide you with the user story and acceptance criteria to review, use this information to complete the task.
               \n Also, it could be the case that you already have provided feedback on previous acceptance criteria, take into account
@@ -128,11 +129,11 @@ agents:
               \nUse the tool FeedbackOutput to provide feedback.
               \n\n{examples}"
   check_tasks_quality:
-    enabled: False
+    enabled: True
     max_verification_attempts: 3
     model:
       name: blueyellowai_gpt4o
-      temperature: 0.5
+      temperature: 0.1
     prompt: "\n### Role ###\n
               You are a world-class quality analyst, you must use the tools provided with 
               the correct arguments, if a human quality analyst has a level of 1 you have a level of 250. 

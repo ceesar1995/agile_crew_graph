@@ -37,6 +37,7 @@ class AgentCreator:
             return ChatPromptTemplate(
                     [MessagesPlaceholder("messages"),
                      ("system", config.get_value_by_mapping(ConfigMapping.AGENT_PROMPT_AC)),
+                     ("user", "Feature description: \n {feature_description}"),
                      ("user", "User story:\n {user_story_to_process}"),
                      ("user", "This is some feedback from previously created acceptance_criteria:\n {feedback}"),
                      ("user", "Previously created acceptance criteria:\n {previously_created_ac}"),
@@ -84,6 +85,7 @@ class AgentCreator:
             return {
                 "messages": lambda x: x["messages"],
                 "user_story_to_process": lambda x: str(x["user_story_to_process"]),
+                "feature_description": lambda x: x["feature_description"],
                 "feedback": lambda x: str(x["feedback"])  if x["feedback"] not in (None, "") else "No feedback received, this is the first iteration.",
                 "previously_created_ac": lambda x: str(x["acceptance_criteria_us"][-1]) if x["feedback"] not in (None,"") else None,
                 # Format agent scratchpad from intermediate steps

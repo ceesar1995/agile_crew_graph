@@ -33,6 +33,7 @@ class AgentVerifier:
         elif self.type == "acceptance_criteria":
             return {
                 "user_story_to_process": lambda x: str(x["user_story_to_process"]),
+                "feature_description": lambda x: x["feature_description"],
                 "feedback": lambda x: str(x["feedback"]) if x["feedback"] not in (None, "") else "No feedback to review, this is the first iteration.",
                 "acceptance_criteria": lambda x: str(x["acceptance_criteria_us"][-1]),
                 "agent_scratchpad": lambda x: format_to_openai_function_messages(
@@ -64,6 +65,7 @@ class AgentVerifier:
         elif self.type == "acceptance_criteria":
             return ChatPromptTemplate([
                 ("system", config.get_value_by_mapping(ConfigMapping.AGENT_PROMPT_CHECK_AC)),
+                ("user", "Feature description: \n{feature_description}"),
                 ("user", "User story:\n{user_story_to_process}"),
                 ("user", "Acceptance criteria to review:\n{acceptance_criteria}"),
                 ("user", "Previously returned feedback:\n{feedback}"),

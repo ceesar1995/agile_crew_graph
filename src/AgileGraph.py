@@ -80,5 +80,6 @@ class AgileCrewGraph:
         },
             config={"recursion_limit": config.get_value_by_mapping(ConfigMapping.RECURSION_LIMIT)})
         logger.debug(result.get("final_output").json())
+        logger.debug(result)
         return result.get("final_output")
 
