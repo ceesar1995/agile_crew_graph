@@ -53,7 +53,7 @@ class ConfigMapping(Enum):
 
 
 class Config:
-    def __init__(self, path: str = "src/config/config.GPT3.5.QA_ENABLED.yml"):
+    def __init__(self, path: str = "src/config/config.GPT4.QA_DISABLED.yml"):
         # Load the config yaml file as a dictionary
         with open(path, "r") as file:
             self._config = yaml.safe_load(file)

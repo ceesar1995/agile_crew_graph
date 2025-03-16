@@ -3,8 +3,10 @@ import os
 import uuid
 
 import streamlit as st
+from bluesheperd.core.project import AzureProject
 
 from AgileGraph import AgileCrewGraph
+from Utils import save_to_ado
 from models.AgileCrewModels import AgileWorkItems
 from models.AgileCrewModels import Feature, Task
 
@@ -63,15 +65,52 @@ def feature_ui(feature: Feature, popup: bool = False):
                 user_story.tasks = new_tasks
             st.button("Delete User Story", key=uuid.uuid4(), on_click=delete_user_story, args=(user_story,),
                       disabled=editing_disabled)
+        if not ado_pat or not target_org_url or not project_name:
+            st.warning('Please enter your Azure DevOps PAT, Org URL, and Project Name!', icon='⚠')
         if popup:
-            if st.button('Save Feature', use_container_width=True):
-                st.session_state.feature[str(uuid.uuid4())] = feature
-                st.toast('Feature saved successfully!')
-                st.rerun()
+            col1, col2 = st.columns([1, 1])
+            with col1:
+                if st.button('Submit Feature to Azure DevOps',
+                             use_container_width=True) \
+                        and ado_pat and target_org_url and project_name:
+                    with st.spinner('Creating feature in Azure Dev Ops...'):
+                        try:
+                            # Call Azure DevOps API to create feature
+                            ado_project = create_ado_project(target_org_url, ado_pat, project_name)
+                            work_item = AgileWorkItems(items=[feature])
+                            print(work_item.json())
+                            save_to_ado(work_item.json(), ado_project)
+                        except Exception as e:
+                            st.error(f'Error creating feature: {e}')
+                            st.rerun()
+                    st.session_state.feature[str(uuid.uuid4())] = feature
+                    st.toast('Feature created successfully!')
+                    st.rerun()
+            with col2:
+                if st.button('Save Feature', use_container_width=True):
+                    st.session_state.feature[str(uuid.uuid4())] = feature
+                    st.toast('Feature saved successfully!')
+                    st.rerun()
+
+        else:
+            edit = st.button("Edit and Submit to Azure DevOps")
+            if edit:
+                create_feature(feature, popup=True)
 
 
 def get_feature_title(key: str):
     return st.session_state.feature[key].title
+
+
+def create_ado_project(target_organization_url: str, personal_access_token: str, project_name: str) -> AzureProject:
+    project = AzureProject(
+        organization_url=target_organization_url,
+        project_name=project_name,
+        pat=personal_access_token,
+    )
+    ado_project = project.connect()
+    return ado_project
+
 
 # Initialize the feature dictionary in the session state
 if 'feature' not in st.session_state:
@@ -80,6 +119,9 @@ if 'feature' not in st.session_state:
 # Sidebar components
 with st.sidebar:
     openai_api_key = st.text_input('OpenAI API Key')
+    ado_pat = st.text_input('Azure DevOps PAT')
+    target_org_url = st.text_input('Azure DevOps Org URL')
+    project_name = st.text_input('Azure DevOps Project Name')
     with st.form("my-form", clear_on_submit=True):
         file = st.file_uploader("Feature uploader", type=['json'])
         submitted = st.form_submit_button("Upload!")
